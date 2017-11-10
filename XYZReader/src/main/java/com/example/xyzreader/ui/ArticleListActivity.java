@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    //private boolean loadFirstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
         getLoaderManager().initLoader(0, null, this);
+        //getLoaderManager().restartLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh();
@@ -76,7 +80,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void refresh() {
-        startService(new Intent(this, UpdaterService.class));
+        //if (!loadFirstTime)
+            startService(new Intent(this, UpdaterService.class));
     }
 
     @Override
@@ -124,6 +129,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         //StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
+        //loadFirstTime = false;
+        Snackbar.make(findViewById(R.id.coord_layout_article_list), "List finished loading", Snackbar.LENGTH_SHORT).show();
+
     }
 
     @Override
